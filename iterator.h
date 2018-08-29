@@ -12,11 +12,21 @@ class Iterator {
         Iterator();
         Iterator(Node<T>* node);
          
-        Iterator<T> operator=(Iterator<T> node);
-        bool operator!=(Iterator<T> cmp);
-        Iterator<T> operator++();
-        Iterator<T> operator--();
-        T operator*();
+        Iterator<T> operator=(Iterator<T> node){
+            return current = node;
+        };
+        bool operator!=(Iterator<T> cmp){
+            return current != cmp.current;
+        };
+        Iterator<T> operator++(){
+            current = current -> next;
+        };
+        Iterator<T> operator--(){
+            current = current -> prev;
+        };
+        T operator*(){
+            return current -> data;
+        };
 };
 
 #endif
