@@ -13,26 +13,34 @@ class List {
         Node<T>* start;
 
     public:
-        List();
+        List(){
+            start = nullptr;
+        };
 
         T front(){
-            return start -> data;
+            if (start == nullptr)
+                cout << "ListError" << endl;
+            else
+                return start -> data;
         };
         T back(){
-            return start -> prev -> data;
+            if (start == nullptr)
+                cout << "ListError" << endl;
+            else
+                return start -> prev -> data;
         };
         void push_front(T value){
             Node<T>* temp = new Node<T>;
             temp -> data = value;
-            if (start = nullptr){
+            if (start == nullptr){
                 temp -> next = temp -> prev = temp;
                 start = temp;
             }
             else{
-                Node<T>* last = start -> prev;
                 temp -> next = start;
-                temp -> prev = last;
-                last -> next = start -> prev = temp;
+                temp -> prev = start -> prev;
+                start -> prev -> next = temp;
+                start -> prev = temp;
                 start = temp;
             }
         };
@@ -44,31 +52,84 @@ class List {
                 start = temp;
             }
             else{
-                Node<T>* last = start -> prev;
                 temp -> next = start;
+                temp -> prev = start -> prev;
+                start -> prev -> next = temp;
                 start -> prev = temp;
-                temp -> prev = last;
-                last -> next = temp;
             }
         };
         void pop_front(){
-            Node<T>* temp = start;
-            start -> next = start -> next -> next;
-
-            delete temp;
+            if (start == nullptr)
+                cout << "ListError" << endl;
+            else{
+                Node<T>* temp = start;
+                start -> prev -> next = start -> next;
+                start -> next -> prev = start -> prev;
+                start = start -> next;
+                delete temp;
+            }
         };
-        void pop_back();
-        T get(int position);
-        void concat(List<T> &other);
+        void pop_back(){
+            if (start == nullptr)
+                cout << "ListError" << endl;
+            else{
+                Node<T>* temp = start -> prev;
+                start -> prev -> prev -> next = start;
+                start -> prev = start -> prev -> prev;
+                delete temp;
+            }
+        };
+        T get(int position){
+            if (position < 0)
+                cout << "ListError" << endl;
+            else{
+                Node<T>* temp = start;
+                for (int i = 0; i < position; i++)
+                    temp = temp -> next;
+                return temp -> data;
+            }
+        };
+        void concat(List<T> &other){
+            Node<T>* last = start -> prev;
+            last -> next = other.start;
+            other.start -> prev -> next = start;
+            start -> prev = other.start -> prev;
+            other.start -> prev = last;
+        };
         bool empty(){
-
+            return start == nullptr;
         };
-        int size();
-        void clear();
-        Iterator<T> begin();
-        Iterator<T> end();
+        int size(){
+            int size = 0;
+            Iterator<T>* temp = start;
+            do{
+                temp++;
+                size++;
+            } while (temp != start);
+            return size;
+        };
+        void clear(){
+            Iterator<T>* temp = start;
+            while (temp != nullptr){
+                temp++;
+                delete temp -> prev;
+            };
+            start = nullptr;
+        };
+        Iterator<T> begin(){
+            Iterator<T>* temp = start;
+        };
+        Iterator<T> end(){
+            Iterator<T>* temp = start -> prev;
+        };
 
-        ~List();
+        ~List(){
+            Node<T>* temp = start;
+            if (temp -> next != nullptr){
+                temp ->
+            };
+            delete this;
+        };
 };
 
 #endif

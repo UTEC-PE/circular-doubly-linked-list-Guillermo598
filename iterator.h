@@ -9,7 +9,9 @@ class Iterator {
         Node<T>* current;
     
     public:
-        Iterator();
+        Iterator(){
+            current = nullptr;
+        };
         Iterator(Node<T>* node);
          
         Iterator<T> operator=(Iterator<T> node){
