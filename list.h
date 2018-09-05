@@ -11,10 +11,12 @@ template <typename T>
 class List {
 private:
     Node<T>* start;
+    int nodes;
 
 public:
     List(){
         start = nullptr;
+        nodes = 0;
     };
 
     T front(){
@@ -36,13 +38,6 @@ public:
             temp -> next = temp -> prev = temp;
             start = temp;
         }
-        else if (start -> next == start){
-            temp -> next = start;
-            temp -> prev = start;
-            start -> prev = temp;
-            start -> next = temp;
-            start = temp;
-        }
         else{
             temp -> next = start;
             temp -> prev = start -> prev;
@@ -50,6 +45,7 @@ public:
             start -> prev = temp;
             start = temp;
         }
+        nodes++;
     };
     void push_back(T value){
         Node<T>* temp = new Node<T>;
@@ -58,18 +54,13 @@ public:
             temp -> next = temp -> prev = temp;
             start = temp;
         }
-        else if (start -> next == start){
-            temp -> next = start;
-            temp -> prev = start;
-            start -> prev = temp;
-            start -> next = temp;
-        }
         else{
             temp -> next = start;
             temp -> prev = start -> prev;
             start -> prev -> next = temp;
             start -> prev = temp;
         }
+        nodes++;
     };
     void pop_front(){
         if (start == nullptr)
@@ -80,6 +71,7 @@ public:
             start -> next -> prev = start -> prev;
             start = start -> next;
             delete temp;
+            nodes --;
         }
     };
     void pop_back(){
@@ -90,6 +82,7 @@ public:
             start -> prev -> prev -> next = start;
             start -> prev = start -> prev -> prev;
             delete temp;
+            nodes--;
         }
     };
     T get(int position){
@@ -102,41 +95,38 @@ public:
             return temp -> data;
         }
     };
+
     void concat(List<T> &other){
         Node<T>* last = start -> prev;
         last -> next = other.start;
         other.start -> prev -> next = start;
         start -> prev = other.start -> prev;
         other.start -> prev = last;
+        nodes += other.nodes;
     };
     bool empty(){
-        return start == nullptr;
+        return (nodes == 0);
     };
     int size(){
-        int size = 0;
-        Node<T>* temp = start;
-        do{
-            temp = temp -> next;
-            size++;
-        } while (temp != start);
-        return size;
+        return nodes;
     };
     void clear(){
         Node<T>* temp = start;
-        for (int i = 0; i < size(); i++){
-            if (temp -> next != start){
-                temp = temp -> next;
-                delete temp -> prev;
-            }
+        while (nodes != 0){
+            Node<T>* aux = temp;
+            temp = temp -> next;
+            delete aux;
+            nodes--;
         }
         start = nullptr;
+        delete temp;
     };
-    /*Iterator<T> begin(){
-        Iterator<T>* temp = start;
+    Iterator<T> begin(){
+        return Iterator<T>(this -> start);
     };
     Iterator<T> end(){
-        Iterator<T>* temp = start -> prev;
-    };*/
+        return Iterator<T>(this -> start -> prev);
+    };
 
     ~List(){
         Node<T>* temp = start;
