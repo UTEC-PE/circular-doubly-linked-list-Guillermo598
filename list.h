@@ -21,13 +21,13 @@ public:
 
     T front(){
         if (start == nullptr)
-            cout << "ListError" << endl;
+            cout << "ListError" << endl; // Falta return, sería mejor dar un throw
         else
             return start -> data;
     };
     T back(){
         if (start == nullptr)
-            cout << "ListError" << endl;
+            cout << "ListError" << endl; // Falta return, sería mejor dar un throw
         else
             return start -> prev -> data;
     };
@@ -87,7 +87,7 @@ public:
     };
     T get(int position){
         if (position < 0)
-            cout << "ListError" << endl;
+            cout << "ListError" << endl; // Falta return, sería mejor dar un throw
         else{
             Node<T>* temp = start;
             for (int i = 0; i < position; i++)
@@ -112,14 +112,14 @@ public:
     };
     void clear(){
         Node<T>* temp = start;
-        while (nodes != 0){
+        while (nodes != 0){ // Deberías usar while (temp) en vez de nodes, pero está bien en general
             Node<T>* aux = temp;
             temp = temp -> next;
             delete aux;
             nodes--;
         }
         start = nullptr;
-        delete temp;
+        delete temp; // Este delete te está causando error, ya estás borrando todos tus elementos en el while
     };
     Iterator<T> begin(){
         return Iterator<T>(this -> start);
